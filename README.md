@@ -1,5 +1,13 @@
 # Kitso Nexus – Business Card & Flyer Templates
 
+![HTML](https://img.shields.io/badge/HTML5-E34F26?style=flat&logo=html5&logoColor=white)
+![CSS](https://img.shields.io/badge/CSS3-1572B6?style=flat&logo=css3&logoColor=white)
+![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat&logo=javascript&logoColor=black)
+![License](https://img.shields.io/badge/License-MIT-2ec4a0?style=flat)
+![Platform](https://img.shields.io/badge/Platform-Windows%20%7C%20macOS%20%7C%20Linux-0d1e35?style=flat)
+![Print Ready](https://img.shields.io/badge/Print%20Ready-300%20DPI-2ec4a0?style=flat)
+![Odoo Partner](https://img.shields.io/badge/Odoo-Official%20Partner-714B67?style=flat&logo=odoo&logoColor=white)
+
 HTML/CSS templates for the Kitso Nexus Advisory Pty Ltd business card and company profile flyer.  
 Designed for easy customisation — no coding knowledge required.
 
