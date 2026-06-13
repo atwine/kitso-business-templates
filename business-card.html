@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kitso Nexus – Business Card</title>
+  <!-- Handwriting font for signature -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+  <style>
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #d0d0d0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      gap: 30px;
+      padding: 40px 20px;
+    }
+
+    /* ── Print button (screen only) ── */
+    .print-btn {
+      display: inline-block;
+      padding: 10px 28px;
+      background: #2ec4a0;
+      color: #fff;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(46,196,160,0.35);
+    }
+    .print-btn:hover { background: #1a9e80; }
+
+    /* ════════════ A4 PRINT LAYOUT ════════════
+       Standard business card: 85.6 × 54 mm
+       A4 page:                210 × 297 mm
+       Grid: 2 columns × 5 rows = 10 cards
+       Margins: ~10 mm each side
+       Crop marks: 3 mm lines, 1 mm offset from card edge
+    ══════════════════════════════════════════ */
+    @media print {
+
+      /* Hide everything except the print sheet */
+      body {
+        margin: 0; padding: 0;
+        background: white;
+        display: block;
+      }
+      .print-btn  { display: none; }
+      .card       { display: none; } /* hide the single preview card */
+
+      /* Show the A4 sheet */
+      .print-sheet { display: block !important; }
+
+      @page {
+        size: A4 portrait;
+        margin: 10mm;           /* browser header/footer suppressed by margin:0 on body */
+      }
+
+      /* A4 sheet container */
+      .print-sheet {
+        width: 190mm;           /* A4 210mm − 10mm margins each side */
+        display: grid;
+        grid-template-columns: 85.6mm 85.6mm;
+        grid-template-rows: repeat(5, 54mm);
+        gap: 4.8mm;             /* small gutter between cards */
+      }
+
+      /* Each card cell with crop marks via outline trick */
+      .print-cell {
+        width: 85.6mm;
+        height: 54mm;
+        position: relative;
+        overflow: visible;
+      }
+
+      /* Crop marks — four corners, each an L-shaped pair of lines */
+      .print-cell::before,
+      .print-cell::after {
+        content: '';
+        position: absolute;
+        background: #999;
+      }
+      /* top-left & top-right horizontal marks */
+      .print-cell::before {
+        width: 3mm; height: 0.2mm;
+        top: -1.5mm; left: -1.5mm;
+        box-shadow:
+          /* top-left vertical */   0.4mm -0.4mm 0 0 #999,
+          /* top-right horizontal */ calc(85.6mm + 0.7mm) 0 0 0 #999,
+          /* top-right vertical */  calc(85.6mm + 1.1mm) -0.4mm 0 0 #999,
+          /* bottom-left horizontal */ 0 calc(54mm + 0.7mm) 0 0 #999,
+          /* bottom-left vertical */   0.4mm calc(54mm + 1.1mm) 0 0 #999,
+          /* bottom-right horizontal */ calc(85.6mm + 0.7mm) calc(54mm + 0.7mm) 0 0 #999,
+          /* bottom-right vertical */   calc(85.6mm + 1.1mm) calc(54mm + 1.1mm) 0 0 #999;
+      }
+
+      /* Scale the card to exactly 85.6 × 54 mm */
+      .print-cell .card {
+        display: flex !important;  /* override the body display:none above */
+        width: 85.6mm !important;
+        height: 54mm  !important;
+        border-radius: 2mm;
+        box-shadow: none;
+        overflow: hidden;
+        /* Force background colours & images to print */
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
+      /* Scale all internal px-based sizing proportionally
+         Original card: 700px wide → 85.6mm ≈ 323px at 96dpi
+         Scale factor: 323/700 ≈ 0.461                          */
+      .print-cell .card * {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
+      .print-cell .l-panel,
+      .print-cell .r-panel {
+        transform-origin: top left;
+        /* panels will inherit the card's mm dimensions naturally */
+      }
+    }
+
+    /* ── Card shell: 700 × 380 px ── */
+    .card {
+      width: 700px;
+      height: 380px;
+      display: flex;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+    }
+
+    /* ════════════ LEFT PANEL ════════════
+       Concept: "Dark Minimal"
+       Deep diagonal gradient. Logo floats at top with generous air.
+       Services use a teal chevron marker — no numbered badges.
+       Bottom-left teal glow adds warmth without clutter.
+    ════════════════════════════════════════ */
+    .left {
+      width: 46%;
+      background: linear-gradient(150deg, #0f2236 0%, #071525 100%);
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      padding: 24px 22px 22px 24px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* soft teal glow — bottom-left corner */
+    .left::before {
+      content: '';
+      position: absolute;
+      bottom: -40px; left: -40px;
+      width: 180px; height: 180px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(46,196,160,0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    /* fine horizontal lines across bottom half — like ledger paper */
+    .left::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 55%;
+      background-image: repeating-linear-gradient(
+        to bottom,
+        transparent,
+        transparent 18px,
+        rgba(255,255,255,0.025) 18px,
+        rgba(255,255,255,0.025) 19px
+      );
+      pointer-events: none;
+    }
+
+    /* ── LOGO ROW ── */
+    .logo-band {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      margin-bottom: 20px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .logo-img {
+      width: 44px;
+      height: 44px;
+      object-fit: contain;
+      flex-shrink: 0;
+      border-radius: 6px;
+    }
+
+    .logo-text { line-height: 1.3; }
+    .logo-text .company {
+      font-size: 12.5px;
+      font-weight: 800;
+      letter-spacing: 1.2px;
+      color: #ffffff;
+      text-transform: uppercase;
+    }
+    .logo-text .sub {
+      font-size: 10px;           /* was 7.5px — more visible */
+      color: #2ec4a0;
+      letter-spacing: 2.2px;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    /* ── SERVICES ── */
+    .services-section {
+      position: relative;
+      z-index: 1;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .services-heading {
+      font-size: 10px;           /* was 7.5px — more visible */
+      font-weight: 800;
+      color: #2ec4a0;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid rgba(46,196,160,0.2);
+    }
+
+    .services-list {
+      list-style: none;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start; /* was space-between — caused large gaps */
+      gap: 7px;                    /* uniform spacing between rows */
+    }
+
+    .services-list li {
+      font-size: 15px;             /* was 13.5px — increased for readability */
+      font-weight: 400;
+      color: #a8c0d0;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      padding: 3px 0;
+    }
+
+    /* teal chevron marker */
+    .services-list li .num {
+      color: #2ec4a0;
+      font-size: 13px;
+      font-weight: 300;
+      line-height: 1;
+      flex-shrink: 0;
+      width: 10px;
+    }
+
+    /* ════════════ DIVIDER ════════════ */
+    .divider {
+      width: 4px;
+      flex-shrink: 0;
+      background: linear-gradient(to bottom, #2ec4a0, #16856a);
+    }
+
+    /* ════════════ RIGHT PANEL ════════════
+       Concept: "Teal Sweep"
+       Bold diagonal teal polygon sweeps top-right corner.
+       Name large on white zone bottom-left.
+       Contact sits cleanly in the middle.
+       QR nestled bottom-right corner.
+    ════════════════════════════════════════ */
+    .right {
+      flex: 1;
+      background: #ffffff;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 22px 22px 20px 22px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* diagonal teal sweep — top-right */
+    .right::before {
+      content: '';
+      position: absolute;
+      top: 0; right: 0;
+      width: 0; height: 0;
+      border-style: solid;
+      border-width: 0 180px 150px 0;
+      border-color: transparent #0d9e7e transparent transparent;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.9;
+    }
+
+    /* second layer — lighter teal, slightly smaller */
+    .right::after {
+      content: '';
+      position: absolute;
+      top: 0; right: 0;
+      width: 0; height: 0;
+      border-style: solid;
+      border-width: 0 220px 100px 0;
+      border-color: transparent #2ec4a0 transparent transparent;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.55;
+    }
+
+    /* ── NAME block ── */
+    .r-top {
+      position: relative;
+      z-index: 1;
+    }
+
+    .honorific {
+      font-size: 11px;          /* was 9px — more visible */
+      font-weight: 800;
+      color: #1a9e80;           /* deeper teal, higher contrast */
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .person-name {
+      font-size: 26px;
+      font-weight: 900;
+      color: #0d1e35;
+      line-height: 1.05;
+      letter-spacing: -0.5px;
+    }
+
+    .person-title {
+      margin-top: 5px;
+      font-size: 11px;          /* was 9px — more visible */
+      font-weight: 700;
+      color: #3d5a70;           /* was #7a90a0 — darker, much stronger contrast */
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    /* ── CONTACT BLOCK ── */
+    .contact-block {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .contact-line {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      font-size: 13.5px;
+      color: #1a2a3a;
+      line-height: 1;
+    }
+
+    .contact-line .lbl {
+      font-size: 8.5px;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: #0d9e7e;
+      min-width: 38px;
+    }
+
+    /* ── BOTTOM ROW: centred QR + Odoo ── */
+    .r-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      z-index: 1;
+      gap: 14px;
+    }
+
+    /* ── QR ── */
+    .qr-badge {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      flex-shrink: 0;
+    }
+
+    .qr-badge-label {
+      font-size: 6px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: #a0b0be;
+    }
+
+    .qr-placeholder {
+      width: 75px; height: 75px;
+      border-radius: 6px;
+      background: #f4f6f8;
+      border: 1px solid #e0e6ec;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .qr-placeholder svg { width: 62px; height: 62px; }
+
+    .qr-img {
+      width: 75px; height: 75px;
+      border-radius: 6px;
+      border: 1px solid #e0e6ec;
+      display: block;
+      object-fit: contain;
+    }
+
+    /* thin teal rule between QR and Odoo badge */
+    .credential-divider {
+      width: 1px;
+      height: 65px;
+      background: linear-gradient(to bottom, transparent, #2ec4a0, transparent);
+      flex-shrink: 0;
+      align-self: center;
+    }
+
+    /* ── ERP ICON PILL ── */
+    .erp-pill {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .erp-pill-label {
+      font-size: 7px;
+      font-weight: 700;
+      letter-spacing: 1.8px;
+      text-transform: uppercase;
+      color: #a0b0be;
+      text-align: center;
+    }
+
+    /* ── ODOO PARTNER PILL ── */
+    .odoo-pill {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .odoo-pill-label {
+      font-size: 7px;
+      font-weight: 700;
+      letter-spacing: 1.8px;
+      text-transform: uppercase;
+      color: #a0b0be;
+      text-align: center;
+    }
+
+    .odoo-pill img {
+      height: 32px;
+      width: auto;
+      display: block;
+    }
+
+    /* ── BOTTOM AREA: lift up + signature ── */
+    .r-bottom {
+      margin-bottom: 14px;      /* raises QR/cogs/logo off the very bottom */
+    }
+
+    .signature {
+      font-family: 'Dancing Script', cursive;
+      font-size: 15px;
+      font-weight: 700;
+      color: #2ec4a0;
+      text-align: center;
+      letter-spacing: 0.5px;
+      opacity: 0.82;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* thin teal rule above signature */
+    .signature::before {
+      content: '';
+      display: block;
+      width: 60px;
+      height: 1px;
+      background: linear-gradient(to right, transparent, #2ec4a0, transparent);
+      margin: 0 auto 6px;
+    }
+
+  </style>
+</head>
+<body>
+
+<p class="print-note">
+  To print: <strong>Ctrl+P</strong> → paper size <strong>3.5 × 2 in</strong> → disable headers/footers → Print
+</p>
+
+<div class="card">
+
+  <!-- ── LEFT ── -->
+  <div class="left">
+
+    <!-- Logo -->
+    <div class="logo-band">
+      <img class="logo-img" src="images/Kitso Logo.jpeg" alt="Kitso Nexus Logo" />
+      <div class="logo-text">
+        <div class="company">Kitso Nexus</div>
+        <div class="sub">Advisory Pty Ltd</div>
+      </div>
+    </div>
+
+    <!-- Services -->
+    <div class="services-section">
+      <div class="services-heading">Our Services</div>
+      <ul class="services-list">
+        <li><span class="num">›</span> ERP Consulting</li>
+        <li><span class="num">›</span> Software Design &amp; Development</li>
+        <li><span class="num">›</span> Odoo Configuration</li>
+        <li><span class="num">›</span> Odoo Training</li>
+        <li><span class="num">›</span> Odoo Support &amp; Maintenance</li>
+        <li><span class="num">›</span> ERP Needs Assessment &amp; Reporting</li>
+      </ul>
+    </div>
+
+  </div>
+
+  <!-- ── DIVIDER ── -->
+  <div class="divider"></div>
+
+  <!-- ── RIGHT ── -->
+  <div class="right">
+
+    <!-- NAME block -->
+    <div class="r-top">
+      <div class="honorific">Mr.</div>
+      <div class="person-name">Mugume Atwine</div>
+      <div class="person-title">Technical Lead</div>
+    </div>
+
+    <!-- CONTACT -->
+    <div class="contact-block">
+      <div class="contact-line">
+        <span class="lbl">Tel</span>
+        <span>+267 71 474 055</span>
+      </div>
+      <div class="contact-line">
+        <span class="lbl">Email</span>
+        <span>amugume@kitsonexus.com</span>
+      </div>
+      <div class="contact-line">
+        <span class="lbl">Web</span>
+        <span>www.kitsonexus.com</span>
+      </div>
+    </div>
+
+    <!-- BOTTOM: QR | divider | Odoo badge, side by side -->
+    <!-- Replace qr-placeholder with <img class="qr-img" src="images/qr.png"> when ready -->
+    <div class="r-bottom">
+
+      <!-- QR -->
+      <div class="qr-badge">
+        <div class="qr-badge-label">Scan me</div>
+        <img class="qr-img" src="images/qrcode.jpg" alt="QR Code" />
+      </div>
+
+      <!-- Teal rule separator -->
+      <div class="credential-divider"></div>
+
+      <!-- ERP icon: three interlocking realistic cogs, inline SVG -->
+      <div class="erp-pill">
+        <div class="erp-pill-label">ERP Solutions</div>
+        <svg width="60" height="54" viewBox="0 0 60 54" fill="none" xmlns="http://www.w3.org/2000/svg">
+
+          <!-- ═══ GEAR 1 — top-left, 8 teeth, r=10 ═══ -->
+          <g transform="translate(15,15)">
+            <!-- teeth: 8 rectangles rotated around centre -->
+            <rect x="-2.2" y="-13.5" width="4.4" height="5" rx="0.8" fill="#2ec4a0" transform="rotate(0)"/>
+            <rect x="-2.2" y="-13.5" width="4.4" height="5" rx="0.8" fill="#2ec4a0" transform="rotate(45)"/>
+            <rect x="-2.2" y="-13.5" width="4.4" height="5" rx="0.8" fill="#2ec4a0" transform="rotate(90)"/>
+            <rect x="-2.2" y="-13.5" width="4.4" height="5" rx="0.8" fill="#2ec4a0" transform="rotate(135)"/>
+            <rect x="-2.2" y="-13.5" width="4.4" height="5" rx="0.8" fill="#2ec4a0" transform="rotate(180)"/>
+            <rect x="-2.2" y="-13.5" width="4.4" height="5" rx="0.8" fill="#2ec4a0" transform="rotate(225)"/>
+            <rect x="-2.2" y="-13.5" width="4.4" height="5" rx="0.8" fill="#2ec4a0" transform="rotate(270)"/>
+            <rect x="-2.2" y="-13.5" width="4.4" height="5" rx="0.8" fill="#2ec4a0" transform="rotate(315)"/>
+            <!-- body -->
+            <circle r="9.5" fill="#0d1e35" stroke="#2ec4a0" stroke-width="1.6"/>
+            <!-- inner hub ring -->
+            <circle r="4"   fill="none"    stroke="#2ec4a0" stroke-width="1.2"/>
+            <!-- centre bolt -->
+            <circle r="1.8" fill="#2ec4a0"/>
+          </g>
+
+          <!-- ═══ GEAR 2 — top-right, 8 teeth, r=10 ═══ -->
+          <g transform="translate(45,15) rotate(22.5)">
+            <rect x="-2.2" y="-13.5" width="4.4" height="5" rx="0.8" fill="#2ec4a0" transform="rotate(0)"/>
+            <rect x="-2.2" y="-13.5" width="4.4" height="5" rx="0.8" fill="#2ec4a0" transform="rotate(45)"/>
+            <rect x="-2.2" y="-13.5" width="4.4" height="5" rx="0.8" fill="#2ec4a0" transform="rotate(90)"/>
+            <rect x="-2.2" y="-13.5" width="4.4" height="5" rx="0.8" fill="#2ec4a0" transform="rotate(135)"/>
+            <rect x="-2.2" y="-13.5" width="4.4" height="5" rx="0.8" fill="#2ec4a0" transform="rotate(180)"/>
+            <rect x="-2.2" y="-13.5" width="4.4" height="5" rx="0.8" fill="#2ec4a0" transform="rotate(225)"/>
+            <rect x="-2.2" y="-13.5" width="4.4" height="5" rx="0.8" fill="#2ec4a0" transform="rotate(270)"/>
+            <rect x="-2.2" y="-13.5" width="4.4" height="5" rx="0.8" fill="#2ec4a0" transform="rotate(315)"/>
+            <circle r="9.5" fill="#0d1e35" stroke="#2ec4a0" stroke-width="1.6"/>
+            <circle r="4"   fill="none"    stroke="#2ec4a0" stroke-width="1.2"/>
+            <circle r="1.8" fill="#2ec4a0"/>
+          </g>
+
+          <!-- ═══ GEAR 3 — bottom-centre, 6 teeth, r=7.5 (smaller, meshes below both) ═══ -->
+          <g transform="translate(30,39) rotate(15)">
+            <rect x="-1.8" y="-10.5" width="3.6" height="4" rx="0.7" fill="#16856a" transform="rotate(0)"/>
+            <rect x="-1.8" y="-10.5" width="3.6" height="4" rx="0.7" fill="#16856a" transform="rotate(60)"/>
+            <rect x="-1.8" y="-10.5" width="3.6" height="4" rx="0.7" fill="#16856a" transform="rotate(120)"/>
+            <rect x="-1.8" y="-10.5" width="3.6" height="4" rx="0.7" fill="#16856a" transform="rotate(180)"/>
+            <rect x="-1.8" y="-10.5" width="3.6" height="4" rx="0.7" fill="#16856a" transform="rotate(240)"/>
+            <rect x="-1.8" y="-10.5" width="3.6" height="4" rx="0.7" fill="#16856a" transform="rotate(300)"/>
+            <circle r="7.5" fill="#0d1e35" stroke="#16856a" stroke-width="1.4"/>
+            <circle r="3"   fill="none"    stroke="#16856a" stroke-width="1.1"/>
+            <circle r="1.4" fill="#16856a"/>
+          </g>
+
+        </svg>
+      </div>
+
+      <!-- Teal rule separator -->
+      <div class="credential-divider"></div>
+
+      <!-- Odoo partner badge -->
+      <div class="odoo-pill">
+        <div class="odoo-pill-label">Official Partner</div>
+        <img src="images/odoo_learning_partner_rgb.svg" alt="Odoo Official Partner" />
+      </div>
+
+    </div>
+
+    <!-- signature tagline -->
+    <div class="signature">Architects of Intelligence</div>
+
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     A4 PRINT SHEET  (hidden on screen, shown on print)
+     10 cards: 2 columns × 5 rows
+     ═══════════════════════════════════════════════ -->
+<div class="print-sheet" style="display:none;" id="printSheet"></div>
+
+<!-- Print button -->
+<button class="print-btn" onclick="window.print()">&#128438; Print / Save as PDF</button>
+
+<script>
+  // Clone the card 10 times into the print sheet
+  (function () {
+    var sheet = document.getElementById('printSheet');
+    var source = document.querySelector('.card');
+    for (var i = 0; i < 10; i++) {
+      var cell = document.createElement('div');
+      cell.className = 'print-cell';
+      cell.appendChild(source.cloneNode(true));
+      sheet.appendChild(cell);
+    }
+  })();
+</script>
+
+<!--
+  HOW TO CUSTOMISE
+  ─────────────────
+  • Name / Title / Contact  → edit text directly in the HTML above
+  • Services list           → add/remove <li> items in .services-list
+  • QR code                 → replace src on <img class="qr-img">
+  • Logo                    → swap src on the <img class="logo-img"> tag
+  • Print                   → click the teal Print button, set paper=A4,
+                               margins=None, tick "Background graphics"
+-->
+
+</body>
+</html>
