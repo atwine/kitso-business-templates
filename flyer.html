@@ -84,9 +84,45 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 28px 48px;
-      background: #0d1e35;           /* dark navy — small area only */
+      padding: 20px 48px;
+      background: #0d1e35;
       border-bottom: 3px solid #2ec4a0;
+      gap: 24px;
+    }
+
+    /* quick contact items in header */
+    .f-header-contacts {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 5px;
+    }
+
+    .f-header-contact-row {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .f-header-contact-row .lbl {
+      font-size: 9.5px;
+      font-weight: 800;
+      color: #2ec4a0;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    .f-header-contact-row .val {
+      font-size: 14px;
+      font-weight: 600;
+      color: #e8f0f6;
+    }
+
+    .f-header-divider {
+      width: 1px;
+      height: 28px;
+      background: rgba(46,196,160,0.3);
+      align-self: center;
     }
 
     .f-logo-band {
@@ -113,7 +149,7 @@
     }
 
     .f-logo-text .sub {
-      font-size: 9.5px;
+      font-size: 10.5px;
       color: #2ec4a0;
       letter-spacing: 2.5px;
       text-transform: uppercase;
@@ -123,7 +159,7 @@
 
     .f-tagline {
       font-family: 'Dancing Script', cursive;
-      font-size: 17px;
+      font-size: 19px;
       color: #2ec4a0;
       text-align: right;
     }
@@ -132,65 +168,129 @@
     .f-hero {
       position: relative;
       z-index: 1;
-      padding: 40px 48px 32px 52px;  /* extra left pad for accent bar */
+      padding: 32px 48px 28px 52px;
       border-bottom: 1px solid #e4eaf0;
+      display: flex;
+      gap: 32px;
+      align-items: center;
+    }
+
+    /* Left column */
+    .f-hero-left {
+      flex: 1;
+      min-width: 0;
     }
 
     .f-hero-eyebrow {
-      font-size: 10px;
+      font-size: 11px;
       font-weight: 800;
       color: #2ec4a0;
       letter-spacing: 4px;
       text-transform: uppercase;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
     }
 
     .f-hero-title {
-      font-size: 38px;
+      font-size: 32px;
       font-weight: 900;
-      color: #0d1e35;                /* dark navy on white — high contrast */
-      line-height: 1.1;
+      color: #0d1e35;
+      line-height: 1.15;
       letter-spacing: -0.5px;
-      max-width: 560px;
     }
 
     .f-hero-title span {
-      color: #2ec4a0;                /* teal accent on key word */
+      color: #2ec4a0;
     }
 
     .f-hero-desc {
-      margin-top: 16px;
-      font-size: 13px;
-      color: #4a6070;                /* dark grey — readable, low ink */
-      line-height: 1.75;
-      max-width: 580px;
+      margin-top: 12px;
+      font-size: 14px;
+      color: #3a5060;
+      line-height: 1.7;
+      text-align: justify;
     }
 
     /* teal accent bar left of hero */
     .f-hero::before {
       content: '';
       position: absolute;
-      left: 36px; top: 40px;
-      width: 4px; height: 52px;
+      left: 36px; top: 32px;
+      width: 4px; height: 48px;
       background: linear-gradient(to bottom, #2ec4a0, #16856a);
       border-radius: 2px;
+    }
+
+    /* Right column — quick contacts in hero */
+    .f-hero-right {
+      flex-shrink: 0;
+      width: 240px;
+      border-left: 1px solid #e4eaf0;
+      padding-left: 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .f-hero-right-heading {
+      font-size: 11px;
+      font-weight: 800;
+      color: #2ec4a0;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #e4eaf0;
+      margin-bottom: 4px;
+    }
+
+    .f-hero-contact-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .f-hero-contact-icon {
+      flex-shrink: 0;
+      width: 30px; height: 30px;
+      border-radius: 50%;
+      background: #f0faf7;
+      border: 1px solid #b2e4d8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+    }
+
+    .f-hero-contact-text .lbl {
+      font-size: 10px;
+      font-weight: 800;
+      color: #2ec4a0;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+
+    .f-hero-contact-text .val {
+      font-size: 14px;
+      font-weight: 600;
+      color: #0d1e35;
+      margin-top: 3px;
+      word-break: break-all;
     }
 
     /* ════════════ SERVICES ════════════ */
     .f-services {
       position: relative;
       z-index: 1;
-      padding: 28px 48px;
+      padding: 20px 48px 18px;
       border-bottom: 1px solid #e4eaf0;
     }
 
     .f-section-heading {
-      font-size: 10px;
+      font-size: 12px;
       font-weight: 800;
       color: #2ec4a0;
       letter-spacing: 4px;
       text-transform: uppercase;
-      margin-bottom: 20px;
+      margin-bottom: 16px;
       padding-bottom: 8px;
       border-bottom: 1px solid #e4eaf0;
     }
@@ -198,128 +298,201 @@
     .f-services-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 12px 32px;
+      gap: 8px 16px;
     }
 
     .f-service-item {
       display: flex;
-      align-items: flex-start;
-      gap: 12px;
+      align-items: stretch;
+      gap: 0;
+      background: #f8fbfe;
+      border-radius: 6px;
+      border: 1px solid #e4eaf0;
+      border-left: 4px solid #2ec4a0;  /* bold teal left accent */
+      overflow: hidden;
     }
 
     .f-service-icon {
       flex-shrink: 0;
-      width: 28px; height: 28px;
-      border-radius: 6px;
-      background: #f0faf7;           /* very light teal tint — almost no ink */
+      width: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #f0faf7;
+      font-size: 20px;
+      border-right: 1px solid #e4eaf0;
+    }
+
+    .f-service-text {
+      padding: 12px 16px;
+    }
+
+    .f-service-text .title {
+      font-size: 15px;
+      font-weight: 800;
+      color: #0d1e35;
+      line-height: 1.2;
+      letter-spacing: 0.2px;
+    }
+
+    .f-service-text .desc {
+      font-size: 13.5px;
+      color: #4a6070;
+      margin-top: 5px;
+      line-height: 1.6;
+    }
+
+    /* ════════════ CONTACT US SECTION ════════════ */
+    .f-contact-section {
+      position: relative;
+      z-index: 1;
+      padding: 18px 48px;
+      border-bottom: 1px solid #e4eaf0;
+      display: flex;
+      gap: 28px;
+      align-items: center;
+    }
+
+    /* Left: contact details — equal width with other two columns */
+    .f-contact-details {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .f-contact-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .f-contact-icon {
+      flex-shrink: 0;
+      width: 34px; height: 34px;
+      border-radius: 50%;
+      background: #f0faf7;
       border: 1px solid #b2e4d8;
       display: flex;
       align-items: center;
       justify-content: center;
-      color: #2ec4a0;
-      font-size: 14px;
-      margin-top: 1px;
+      font-size: 16px;
     }
 
-    .f-service-text .title {
-      font-size: 13px;
-      font-weight: 700;
-      color: #0d1e35;                /* dark navy */
-      line-height: 1.3;
-    }
-
-    .f-service-text .desc {
+    .f-contact-row-text .lbl {
       font-size: 11px;
-      color: #6a8090;
-      margin-top: 2px;
-      line-height: 1.5;
-    }
-
-    /* ════════════ WHY US ════════════ */
-    .f-why {
-      position: relative;
-      z-index: 1;
-      padding: 24px 48px;
-      border-bottom: 1px solid #e4eaf0;
-    }
-
-    .f-why-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 14px;
-      margin-top: 18px;
-    }
-
-    .f-why-card {
-      background: #f8fbfe;           /* near-white — negligible ink */
-      border: 1px solid #c8dcea;
-      border-top: 3px solid #2ec4a0; /* teal top accent only */
-      border-radius: 6px;
-      padding: 16px 14px;
-      text-align: center;
-    }
-
-    .f-why-card .number {
-      font-size: 26px;
-      font-weight: 900;
-      color: #2ec4a0;
-      line-height: 1;
-    }
-
-    .f-why-card .label {
-      font-size: 10.5px;
-      color: #4a6070;
-      margin-top: 6px;
-      line-height: 1.4;
-      font-weight: 600;
-      letter-spacing: 0.5px;
-    }
-
-    /* ════════════ FOOTER ════════════ */
-    .f-footer {
-      position: relative;
-      z-index: 1;
-      margin-top: auto;
-      background: #0d1e35;           /* dark navy strip — mirrors header */
-      border-top: 3px solid #2ec4a0;
-      padding: 20px 48px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 20px;
-    }
-
-    .f-contact-item {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
-
-    .f-contact-item .lbl {
-      font-size: 8px;
       font-weight: 800;
       color: #2ec4a0;
       letter-spacing: 2px;
       text-transform: uppercase;
     }
 
-    .f-contact-item .val {
-      font-size: 12px;
+    .f-contact-row-text .val {
+      font-size: 15px;
       font-weight: 600;
-      color: #e8f0f6;
+      color: #0d1e35;
+      margin-top: 3px;
     }
 
-    .f-footer-divider {
-      width: 1px;
-      height: 36px;
-      background: rgba(46,196,160,0.3);
+    /* Facebook icon */
+    .f-fb-icon {
+      width: 18px; height: 18px;
+      border-radius: 50%;
+      background: #1877F2;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 900;
+      color: #fff;
+      flex-shrink: 0;
+      line-height: 1;
+    }
+
+    /* Right: QR + CTA — equal flex column, centred */
+    .f-contact-qr {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      text-align: center;
+    }
+
+    .f-contact-qr img {
+      width: 95px; height: 95px;
+      border-radius: 8px;
+      border: 2px solid #2ec4a0;
+      object-fit: contain;
+      display: block;
+    }
+
+    .f-qr-label {
+      font-size: 13px;
+      font-weight: 700;
+      color: #2ec4a0;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+
+    .f-qr-sub {
+      font-size: 12px;
+      color: #4a6070;
+      line-height: 1.5;
+      max-width: 140px;
+    }
+
+    /* ════════════ FOOTER (slim brand bar) ════════════ */
+    .f-footer {
+      position: relative;
+      z-index: 1;
+      margin-top: auto;
+      background: #0d1e35;
+      border-top: 3px solid #2ec4a0;
+      padding: 12px 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       flex-shrink: 0;
     }
 
-    .f-odoo-badge img {
-      height: 28px;
-      width: auto;
-      opacity: 0.9;
+    .f-footer-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .f-footer-logo {
+      width: 32px; height: 32px;
+      border-radius: 5px;
+      object-fit: cover;
+      border: 1px solid rgba(46,196,160,0.4);
+    }
+
+    .f-footer-name {
+      font-size: 15px;
+      font-weight: 900;
+      color: #ffffff;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .f-footer-sub {
+      font-size: 10px;
+      color: #2ec4a0;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+
+    .f-footer-tagline {
+      font-family: 'Dancing Script', cursive;
+      font-size: 17px;
+      color: #2ec4a0;
+      opacity: 0.85;
     }
 
   </style>
@@ -333,6 +506,7 @@
 
   <!-- HEADER -->
   <div class="f-header">
+    <!-- Logo -->
     <div class="f-logo-band">
       <img class="f-logo-img" src="images/Kitso Logo.jpeg" alt="Kitso Nexus Logo" />
       <div class="f-logo-text">
@@ -340,21 +514,78 @@
         <div class="sub">Advisory Pty Ltd</div>
       </div>
     </div>
+
+    <!-- Quick contacts: Tel + Email -->
+    <div class="f-header-divider"></div>
+    <div class="f-header-contacts">
+      <div class="f-header-contact-row">
+        <span class="lbl">Tel</span>
+        <span class="val">+267 74 243 088</span>
+      </div>
+      <div class="f-header-contact-row">
+        <span class="lbl">Email</span>
+        <span class="val">info@kitsonexus.com</span>
+      </div>
+    </div>
+    <div class="f-header-divider"></div>
+
+    <!-- Tagline -->
     <div class="f-tagline">Architects of Intelligence</div>
   </div>
 
-  <!-- HERO -->
+  <!-- HERO: split two columns -->
   <div class="f-hero">
-    <div class="f-hero-eyebrow">Company Profile</div>
-    <div class="f-hero-title">
-      Intelligent <span>ERP Solutions</span><br>for Modern Business
+
+    <!-- Left: title + description -->
+    <div class="f-hero-left">
+      <div class="f-hero-eyebrow">Company Profile</div>
+      <div class="f-hero-title">
+        Intelligent <span>ERP Solutions</span><br>for Modern Business
+      </div>
+      <p class="f-hero-desc">
+        Kitso Nexus Advisory Pty Ltd is a technology consultancy specialising in
+        ERP implementation, Odoo configuration, and bespoke software development.
+        We help organisations streamline operations and grow with confidence.
+      </p>
     </div>
-    <p class="f-hero-desc">
-      Kitso Nexus Advisory Pty Ltd is a premier technology consultancy specialising in
-      ERP implementation, Odoo configuration, and bespoke software development.
-      We help organisations streamline operations, unlock data insights, and grow
-      with confidence through tailored digital solutions.
-    </p>
+
+    <!-- Right: quick contact details -->
+    <div class="f-hero-right">
+      <div class="f-hero-right-heading">Contact Us</div>
+
+      <div class="f-hero-contact-row">
+        <div class="f-hero-contact-icon">📞</div>
+        <div class="f-hero-contact-text">
+          <div class="lbl">Tel</div>
+          <div class="val">+267 74 243 088</div>
+        </div>
+      </div>
+
+      <div class="f-hero-contact-row">
+        <div class="f-hero-contact-icon">✉</div>
+        <div class="f-hero-contact-text">
+          <div class="lbl">Email</div>
+          <div class="val">info@kitsonexus.com</div>
+        </div>
+      </div>
+
+      <div class="f-hero-contact-row">
+        <div class="f-hero-contact-icon">🌐</div>
+        <div class="f-hero-contact-text">
+          <div class="lbl">Web</div>
+          <div class="val">www.kitsonexus.com</div>
+        </div>
+      </div>
+
+      <div class="f-hero-contact-row">
+        <div class="f-hero-contact-icon"><span class="f-fb-icon">f</span></div>
+        <div class="f-hero-contact-text">
+          <div class="lbl">Facebook</div>
+          <div class="val">Kitso Nexus</div>
+        </div>
+      </div>
+    </div>
+
   </div>
 
   <!-- SERVICES -->
@@ -413,45 +644,71 @@
     </div>
   </div>
 
-  <!-- WHY US -->
-  <div class="f-why">
-    <div class="f-section-heading">Why Kitso Nexus</div>
-    <div class="f-why-grid">
-      <div class="f-why-card">
-        <div class="number">100%</div>
-        <div class="label">Odoo Certified<br>Official Partner</div>
+  <!-- CONTACT US — safe centre zone, never near fold -->
+  <div class="f-contact-section">
+
+    <!-- Left: contact details -->
+    <div class="f-contact-details">
+      <div class="f-section-heading" style="margin-bottom:14px;">Get In Touch</div>
+
+      <div class="f-contact-row">
+        <div class="f-contact-icon">📞</div>
+        <div class="f-contact-row-text">
+          <div class="lbl">Tel</div>
+          <div class="val">+267 74 243 088</div>
+        </div>
       </div>
-      <div class="f-why-card">
-        <div class="number" style="font-size:18px;">End-to-End</div>
-        <div class="label">Full-Cycle<br>ERP Delivery</div>
+
+      <div class="f-contact-row">
+        <div class="f-contact-icon">✉</div>
+        <div class="f-contact-row-text">
+          <div class="lbl">Email</div>
+          <div class="val">info@kitsonexus.com</div>
+        </div>
       </div>
-      <div class="f-why-card">
-        <div class="number">24/7</div>
-        <div class="label">Support &amp;<br>Maintenance</div>
+
+      <div class="f-contact-row">
+        <div class="f-contact-icon">🌐</div>
+        <div class="f-contact-row-text">
+          <div class="lbl">Web</div>
+          <div class="val">www.kitsonexus.com</div>
+        </div>
+      </div>
+
+      <div class="f-contact-row">
+        <div class="f-contact-icon"><span class="f-fb-icon">f</span></div>
+        <div class="f-contact-row-text">
+          <div class="lbl">Facebook</div>
+          <div class="val">Kitso Nexus</div>
+        </div>
       </div>
     </div>
+
+    <!-- Middle: Odoo badge — equal flex column, centred -->
+    <div style="flex:1; min-width:0; align-self:stretch; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px; padding:0 16px; border-left:1px solid #e4eaf0; border-right:1px solid #e4eaf0; text-align:center;">
+      <img src="images/odoo_learning_partner_rgb.svg" alt="Odoo Official Partner" style="height:60px; width:auto; display:block;" />
+      <div style="font-size:13px; font-weight:800; color:#0d1e35; letter-spacing:1.5px; text-transform:uppercase; line-height:1.6;">Proud Odoo<br>Official Partner</div>
+    </div>
+
+    <!-- Right: QR code -->
+    <div class="f-contact-qr">
+      <img src="images/qrcode.jpg" alt="Scan QR Code" />
+      <div class="f-qr-label">Scan to Visit</div>
+      <div class="f-qr-sub">Scan with your phone to reach our website instantly</div>
+    </div>
+
   </div>
 
-  <!-- FOOTER -->
+  <!-- FOOTER — slim brand bar only -->
   <div class="f-footer">
-    <div class="f-contact-item">
-      <span class="lbl">Tel</span>
-      <span class="val">+267 71 474 055</span>
+    <div class="f-footer-brand">
+      <img class="f-footer-logo" src="images/Kitso Logo.jpeg" alt="Kitso Nexus" />
+      <div>
+        <div class="f-footer-name">Kitso Nexus</div>
+        <div class="f-footer-sub">Advisory Pty Ltd</div>
+      </div>
     </div>
-    <div class="f-footer-divider"></div>
-    <div class="f-contact-item">
-      <span class="lbl">Email</span>
-      <span class="val">amugume@kitsonexus.com</span>
-    </div>
-    <div class="f-footer-divider"></div>
-    <div class="f-contact-item">
-      <span class="lbl">Web</span>
-      <span class="val">www.kitsonexus.com</span>
-    </div>
-    <div class="f-footer-divider"></div>
-    <div class="f-odoo-badge">
-      <img src="images/odoo_learning_partner_rgb.svg" alt="Odoo Official Partner" />
-    </div>
+    <div class="f-footer-tagline">Architects of Intelligence</div>
   </div>
 
 </div>
