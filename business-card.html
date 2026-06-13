@@ -333,7 +333,7 @@
       font-weight: 800;
       color: #1a9e80;           /* deeper teal, higher contrast */
       letter-spacing: 3px;
-      text-transform: uppercase;
+      text-transform: none;     /* respect user's casing from the form */
       margin-bottom: 4px;
     }
 
@@ -351,7 +351,7 @@
       font-weight: 700;
       color: #3d5a70;           /* was #7a90a0 — darker, much stronger contrast */
       letter-spacing: 2px;
-      text-transform: uppercase;
+      text-transform: none;     /* respect user's casing from the form */
     }
 
     /* ── CONTACT BLOCK ── */
@@ -384,7 +384,7 @@
     /* ── BOTTOM ROW: centred QR + Odoo ── */
     .r-bottom {
       display: flex;
-      align-items: center;
+      align-items: flex-start;   /* all three start on the same top line */
       justify-content: center;
       position: relative;
       z-index: 1;
@@ -422,7 +422,7 @@
     .qr-placeholder svg { width: 62px; height: 62px; }
 
     .qr-img {
-      width: 75px; height: 75px;
+      width: 72px; height: 72px;  /* scaled up — matched to cogs SVG height */
       border-radius: 6px;
       border: 1px solid #e0e6ec;
       display: block;
@@ -432,10 +432,10 @@
     /* thin teal rule between QR and Odoo badge */
     .credential-divider {
       width: 1px;
-      height: 65px;
+      height: 72px;              /* matches the unified item height */
       background: linear-gradient(to bottom, transparent, #2ec4a0, transparent);
       flex-shrink: 0;
-      align-self: center;
+      align-self: flex-start;
     }
 
     /* ── ERP ICON PILL ── */
@@ -475,7 +475,7 @@
     }
 
     .odoo-pill img {
-      height: 32px;
+      height: 48px;              /* scaled up to match QR and cogs */
       width: auto;
       display: block;
     }
@@ -505,6 +505,68 @@
       height: 1px;
       background: linear-gradient(to right, transparent, #2ec4a0, transparent);
       margin: 0 auto 6px;
+    }
+
+    /* ════════════ LIVE EDITOR PANEL (screen only) ════════════ */
+    @media print { .editor-panel { display: none !important; } }
+
+    .editor-panel {
+      width: 700px;
+      background: #1a2a3a;
+      border-radius: 10px;
+      padding: 24px 28px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.3);
+    }
+
+    .editor-panel h2 {
+      font-size: 11px;
+      font-weight: 800;
+      color: #2ec4a0;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      margin-bottom: 18px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid rgba(46,196,160,0.2);
+    }
+
+    .editor-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px 24px;
+    }
+
+    .editor-field {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .editor-field label {
+      font-size: 9px;
+      font-weight: 700;
+      color: #2ec4a0;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    .editor-field input {
+      background: #0d1e35;
+      border: 1px solid rgba(46,196,160,0.25);
+      border-radius: 5px;
+      padding: 7px 10px;
+      font-size: 12px;
+      color: #e8f0f6;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .editor-field input:focus {
+      border-color: #2ec4a0;
+    }
+
+    .editor-field input::placeholder {
+      color: #4a6070;
     }
 
   </style>
@@ -552,24 +614,24 @@
 
     <!-- NAME block -->
     <div class="r-top">
-      <div class="honorific">Mr.</div>
-      <div class="person-name">Mugume Atwine</div>
-      <div class="person-title">Technical Lead</div>
+      <div class="honorific"    id="card-honorific">Mr.</div>
+      <div class="person-name"  id="card-name">Mugume Atwine</div>
+      <div class="person-title" id="card-title">Technical Lead</div>
     </div>
 
     <!-- CONTACT -->
     <div class="contact-block">
       <div class="contact-line">
         <span class="lbl">Tel</span>
-        <span>+267 71 474 055</span>
+        <span id="card-tel">+267 71 474 055</span>
       </div>
       <div class="contact-line">
         <span class="lbl">Email</span>
-        <span>amugume@kitsonexus.com</span>
+        <span id="card-email">amugume@kitsonexus.com</span>
       </div>
       <div class="contact-line">
         <span class="lbl">Web</span>
-        <span>www.kitsonexus.com</span>
+        <span id="card-web">www.kitsonexus.com</span>
       </div>
     </div>
 
@@ -579,7 +641,6 @@
 
       <!-- QR -->
       <div class="qr-badge">
-        <div class="qr-badge-label">Scan me</div>
         <img class="qr-img" src="images/qrcode.jpg" alt="QR Code" />
       </div>
 
@@ -589,7 +650,7 @@
       <!-- ERP icon: three interlocking realistic cogs, inline SVG -->
       <div class="erp-pill">
         <div class="erp-pill-label">ERP Solutions</div>
-        <svg width="60" height="54" viewBox="0 0 60 54" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg width="80" height="72" viewBox="0 0 60 54" fill="none" xmlns="http://www.w3.org/2000/svg">
 
           <!-- ═══ GEAR 1 — top-left, 8 teeth, r=10 ═══ -->
           <g transform="translate(15,15)">
@@ -665,21 +726,160 @@
      ═══════════════════════════════════════════════ -->
 <div class="print-sheet" style="display:none;" id="printSheet"></div>
 
-<!-- Print button -->
-<button class="print-btn" onclick="window.print()">&#128438; Print / Save as PDF</button>
+<!-- dom-to-image for image export (handles CSS gradients better than html2canvas) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dom-to-image/2.6.0/dom-to-image.min.js"></script>
+
+<!-- ── LIVE EDITOR PANEL ── -->
+<div class="editor-panel">
+  <h2>&#9998; Customise Card Details</h2>
+  <div class="editor-grid">
+    <div class="editor-field">
+      <label>Honorific</label>
+      <input id="in-honorific" type="text" placeholder="Mr. / Ms. / Dr." value="Mr." />
+    </div>
+    <div class="editor-field">
+      <label>Full Name</label>
+      <input id="in-name" type="text" placeholder="Full Name" value="Mugume Atwine" />
+    </div>
+    <div class="editor-field">
+      <label>Job Title</label>
+      <input id="in-title" type="text" placeholder="e.g. Technical Lead" value="Technical Lead" />
+    </div>
+    <div class="editor-field">
+      <label>Tel</label>
+      <input id="in-tel" type="text" placeholder="+000 00 000 000" value="+267 71 474 055" />
+    </div>
+    <div class="editor-field">
+      <label>Email</label>
+      <input id="in-email" type="text" placeholder="name@company.com" value="amugume@kitsonexus.com" />
+    </div>
+    <div class="editor-field">
+      <label>Website</label>
+      <input id="in-web" type="text" placeholder="www.company.com" value="www.kitsonexus.com" />
+    </div>
+  </div>
+</div>
+
+<!-- Save as Image button -->
+<button class="print-btn" id="saveBtn">&#128247; Save as Image</button>
 
 <script>
-  // Clone the card 10 times into the print sheet
-  (function () {
-    var sheet = document.getElementById('printSheet');
-    var source = document.querySelector('.card');
-    for (var i = 0; i < 10; i++) {
-      var cell = document.createElement('div');
-      cell.className = 'print-cell';
-      cell.appendChild(source.cloneNode(true));
-      sheet.appendChild(cell);
+  /* Live update: each input instantly reflects in the card */
+  var fields = [
+    { input: 'in-honorific', card: 'card-honorific' },
+    { input: 'in-name',      card: 'card-name'      },
+    { input: 'in-title',     card: 'card-title'     },
+    { input: 'in-tel',       card: 'card-tel'       },
+    { input: 'in-email',     card: 'card-email'     },
+    { input: 'in-web',       card: 'card-web'       }
+  ];
+
+  fields.forEach(function (f) {
+    var input = document.getElementById(f.input);
+    var target = document.getElementById(f.card);
+    input.addEventListener('input', function () {
+      target.textContent = input.value;
+    });
+  });
+</script>
+
+<script>
+  /* ── Embed 300 DPI (pHYs chunk) into a PNG data URL ──────────────────
+     PNG pHYs chunk format:
+       4 bytes: chunk length (9)
+       4 bytes: 'pHYs'
+       4 bytes: pixels per unit X  (11811 = 300 DPI in pixels/metre)
+       4 bytes: pixels per unit Y  (11811)
+       1 byte:  unit (1 = metre)
+       4 bytes: CRC32 of chunk type + data
+     We splice this chunk in right after the PNG IHDR chunk (byte 33).
+  ──────────────────────────────────────────────────────────────────── */
+  function injectDPI(dataUrl, dpi) {
+    var ppm = Math.round(dpi / 0.0254); /* pixels per metre */
+
+    /* CRC32 lookup table */
+    var crcTable = (function () {
+      var t = [], c, n, k;
+      for (n = 0; n < 256; n++) {
+        c = n;
+        for (k = 0; k < 8; k++) c = (c & 1) ? (0xEDB88320 ^ (c >>> 1)) : (c >>> 1);
+        t[n] = c;
+      }
+      return t;
+    })();
+
+    function crc32(buf) {
+      var c = 0xFFFFFFFF;
+      for (var i = 0; i < buf.length; i++) c = crcTable[(c ^ buf[i]) & 0xFF] ^ (c >>> 8);
+      return (c ^ 0xFFFFFFFF) >>> 0;
     }
-  })();
+
+    function u32(n) { return [(n >>> 24) & 0xFF, (n >>> 16) & 0xFF, (n >>> 8) & 0xFF, n & 0xFF]; }
+
+    /* Build pHYs chunk bytes */
+    var chunkType = [112, 72, 89, 115]; /* 'pHYs' */
+    var chunkData = u32(ppm).concat(u32(ppm), [1]);
+    var chunkCRC  = u32(crc32(chunkType.concat(chunkData)));
+    var phys = [0,0,0,9].concat(chunkType, chunkData, chunkCRC); /* length=9 */
+
+    /* Decode base64 PNG, splice pHYs after IHDR (byte offset 33) */
+    var b64    = dataUrl.split(',')[1];
+    var binary = atob(b64);
+    var bytes  = new Uint8Array(binary.length);
+    for (var i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+
+    var result = new Uint8Array(bytes.length + phys.length);
+    result.set(bytes.subarray(0, 33));          /* PNG signature + IHDR */
+    result.set(new Uint8Array(phys), 33);        /* inject pHYs */
+    result.set(bytes.subarray(33), 33 + phys.length); /* rest of PNG */
+
+    var out = '';
+    result.forEach(function (b) { out += String.fromCharCode(b); });
+    return 'data:image/png;base64,' + btoa(out);
+  }
+
+  document.getElementById('saveBtn').addEventListener('click', function () {
+    var btn = this;
+    btn.textContent = 'Saving…';
+    btn.disabled = true;
+
+    var card  = document.querySelector('.card');
+    var scale = 4; /* 4× render → ~330 DPI output (2800×1520px for 85.6×54mm card) */
+
+    /* Wait for fonts before capturing */
+    var fontReady = document.fonts ? document.fonts.ready : Promise.resolve();
+
+    fontReady.then(function () {
+      return domtoimage.toPng(card, {
+        width:  card.offsetWidth  * scale,
+        height: card.offsetHeight * scale,
+        style: {
+          transform:       'scale(' + scale + ')',
+          transformOrigin: 'top left'
+        }
+      });
+    }).then(function (dataUrl) {
+      /* Inject 300 DPI metadata into the PNG before saving */
+      var dataUrlWith300DPI = injectDPI(dataUrl, 300);
+
+      var link = document.createElement('a');
+      link.download = 'Kitso-Nexus-Business-Card-300dpi.png';
+      link.href = dataUrlWith300DPI;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      btn.textContent = '✓ Saved!';
+      setTimeout(function () {
+        btn.textContent = '📷 Save as Image';
+        btn.disabled = false;
+      }, 2000);
+    }).catch(function (err) {
+      console.error('Save failed:', err);
+      btn.textContent = '⚠ Failed — check console';
+      btn.disabled = false;
+    });
+  });
 </script>
 
 <!--
