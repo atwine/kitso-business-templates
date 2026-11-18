@@ -6,7 +6,9 @@
   <title>Kitso Nexus – Business Card</title>
   <!-- Handwriting font for signature -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+  <!-- crossorigin lets dom-to-image read this stylesheet and embed the font
+       in exported images/PDFs; without it the tagline falls back to a plain font -->
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet" crossorigin="anonymous">
   <style>
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -39,103 +41,69 @@
       box-shadow: 0 4px 14px rgba(46,196,160,0.35);
     }
     .print-btn:hover { background: #1a9e80; }
+    .print-btn:disabled { opacity: 0.7; cursor: wait; }
+    .actions { display: flex; gap: 12px; }
 
-    /* ════════════ A4 PRINT LAYOUT ════════════
-       Standard business card: 85.6 × 54 mm
-       A4 page:                210 × 297 mm
-       Grid: 2 columns × 5 rows = 10 cards
-       Margins: ~10 mm each side
-       Crop marks: 3 mm lines, 1 mm offset from card edge
-    ══════════════════════════════════════════ */
+    /* ════════════ PRINTER PDF: 3 mm BLEED ════════════
+       The PDF page is 96 × 56 mm: the 90 × 50 mm card plus 3 mm on every
+       side. The printer trims it back to 90 × 50 mm, so backgrounds must run
+       past the cut line while text stays exactly where it is.
+       3 mm on a 700 px wide / 90 mm card = 23.33 px.
+       Applied only to the off-screen copy that renderBleedPng() renders.        */
+    .card.bleed {
+      width: 746.67px;            /* 700 + 2 × 23.33 */
+      height: 435.67px;           /* 389 + 2 × 23.33 */
+      border-radius: 0;
+      box-shadow: none;
+    }
+    .card.bleed .left {
+      width: 345.33px;            /* 322 (46% of 700) + 23.33 */
+      padding: 47.33px 22px 45.33px 47.33px;   /* each outer side + 23.33 */
+    }
+    .card.bleed .right {
+      padding: 45.33px 45.33px 43.33px 22px;   /* each outer side + 23.33 */
+    }
+    /* Corner triangles: grown so their slanted edge stays on the same line
+       once the bleed is trimmed off. */
+    .card.bleed .right::before { border-width: 0 231.33px 192.78px 0; }
+    .card.bleed .right::after  { border-width: 0 294.67px 133.94px 0; }
+    .bleed-stage { position: fixed; left: -10000px; top: 0; }
+
+    /* Ctrl+P prints the page as shown, minus the buttons and editor */
+    @media print { .actions { display: none; } }
+
+    /* ════════════ EDITABLE PDF ════════════
+       "Export editable PDF" prints through Chrome so text stays real text.
+       While body has .editable-print, only the bleed copy prints, at exactly
+       96 × 56 mm. The matching @page size is added by the script, because
+       @page cannot depend on a class. zoom (not transform) so Chrome lays the
+       copy out at its printed size: 746.67 px × 0.485939 = 362.83 px = 96 mm. */
+    .editable-stage { display: none; }
     @media print {
-
-      /* Hide everything except the print sheet */
-      body {
-        margin: 0; padding: 0;
-        background: white;
+      body.editable-print {
+        display: block; margin: 0; padding: 0; min-height: 0; background: #fff;
+      }
+      body.editable-print > *:not(.editable-stage) { display: none !important; }
+      body.editable-print .editable-stage {
         display: block;
+        width: 96mm; height: 56mm;
+        overflow: hidden;          /* rounding must not spill onto a 2nd page */
       }
-      .print-btn  { display: none; }
-      .card       { display: none; } /* hide the single preview card */
-
-      /* Show the A4 sheet */
-      .print-sheet { display: block !important; }
-
-      @page {
-        size: A4 portrait;
-        margin: 10mm;           /* browser header/footer suppressed by margin:0 on body */
+      body.editable-print .editable-stage .card {
+        zoom: 0.485939;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;   /* backgrounds print without ticking a box */
       }
-
-      /* A4 sheet container */
-      .print-sheet {
-        width: 190mm;           /* A4 210mm − 10mm margins each side */
-        display: grid;
-        grid-template-columns: 85.6mm 85.6mm;
-        grid-template-rows: repeat(5, 54mm);
-        gap: 4.8mm;             /* small gutter between cards */
-      }
-
-      /* Each card cell with crop marks via outline trick */
-      .print-cell {
-        width: 85.6mm;
-        height: 54mm;
-        position: relative;
-        overflow: visible;
-      }
-
-      /* Crop marks — four corners, each an L-shaped pair of lines */
-      .print-cell::before,
-      .print-cell::after {
-        content: '';
-        position: absolute;
-        background: #999;
-      }
-      /* top-left & top-right horizontal marks */
-      .print-cell::before {
-        width: 3mm; height: 0.2mm;
-        top: -1.5mm; left: -1.5mm;
-        box-shadow:
-          /* top-left vertical */   0.4mm -0.4mm 0 0 #999,
-          /* top-right horizontal */ calc(85.6mm + 0.7mm) 0 0 0 #999,
-          /* top-right vertical */  calc(85.6mm + 1.1mm) -0.4mm 0 0 #999,
-          /* bottom-left horizontal */ 0 calc(54mm + 0.7mm) 0 0 #999,
-          /* bottom-left vertical */   0.4mm calc(54mm + 1.1mm) 0 0 #999,
-          /* bottom-right horizontal */ calc(85.6mm + 0.7mm) calc(54mm + 0.7mm) 0 0 #999,
-          /* bottom-right vertical */   calc(85.6mm + 1.1mm) calc(54mm + 1.1mm) 0 0 #999;
-      }
-
-      /* Scale the card to exactly 85.6 × 54 mm */
-      .print-cell .card {
-        display: flex !important;  /* override the body display:none above */
-        width: 85.6mm !important;
-        height: 54mm  !important;
-        border-radius: 2mm;
-        box-shadow: none;
-        overflow: hidden;
-        /* Force background colours & images to print */
+      body.editable-print .editable-stage .card * {
         -webkit-print-color-adjust: exact;
         print-color-adjust: exact;
-      }
-
-      /* Scale all internal px-based sizing proportionally
-         Original card: 700px wide → 85.6mm ≈ 323px at 96dpi
-         Scale factor: 323/700 ≈ 0.461                          */
-      .print-cell .card * {
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
-      }
-
-      .print-cell .l-panel,
-      .print-cell .r-panel {
-        transform-origin: top left;
-        /* panels will inherit the card's mm dimensions naturally */
       }
     }
 
-    /* ── Card shell: 700 × 380 px ── */
+    /* ── Card shell: 700 × 389 px (90 × 50 mm shape) ── */
     .card {
       width: 700px;
-      height: 380px;
+      height: 389px;
       display: flex;
       border-radius: 10px;
       overflow: hidden;
@@ -573,9 +541,6 @@
 </head>
 <body>
 
-<p class="print-note">
-  To print: <strong>Ctrl+P</strong> → paper size <strong>3.5 × 2 in</strong> → disable headers/footers → Print
-</p>
 
 <div class="card">
 
@@ -720,14 +685,10 @@
 
 </div>
 
-<!-- ═══════════════════════════════════════════════
-     A4 PRINT SHEET  (hidden on screen, shown on print)
-     10 cards: 2 columns × 5 rows
-     ═══════════════════════════════════════════════ -->
-<div class="print-sheet" style="display:none;" id="printSheet"></div>
-
 <!-- dom-to-image for image export (handles CSS gradients better than html2canvas) -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/dom-to-image/2.6.0/dom-to-image.min.js"></script>
+<!-- jsPDF builds the printer PDF in the browser -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <!-- ── LIVE EDITOR PANEL ── -->
 <div class="editor-panel">
@@ -760,8 +721,10 @@
   </div>
 </div>
 
-<!-- Save as Image button -->
-<button class="print-btn" id="saveBtn">&#128247; Save as Image</button>
+<!-- One button exports the image, the PDF and the editable PDF -->
+<div class="actions">
+  <button class="print-btn" id="exportBtn">Export all (image + PDF + editable PDF)</button>
+</div>
 
 <script>
   /* Live update: each input instantly reflects in the card */
@@ -781,15 +744,16 @@
       target.textContent = input.value;
     });
   });
+
 </script>
 
 <script>
-  /* ── Embed 300 DPI (pHYs chunk) into a PNG data URL ──────────────────
+  /* ── Embed a DPI value (pHYs chunk) into a PNG data URL ──────────────
      PNG pHYs chunk format:
        4 bytes: chunk length (9)
        4 bytes: 'pHYs'
-       4 bytes: pixels per unit X  (11811 = 300 DPI in pixels/metre)
-       4 bytes: pixels per unit Y  (11811)
+       4 bytes: pixels per unit X  (e.g. 11811 = 300 DPI in pixels/metre)
+       4 bytes: pixels per unit Y
        1 byte:  unit (1 = metre)
        4 bytes: CRC32 of chunk type + data
      We splice this chunk in right after the PNG IHDR chunk (byte 33).
@@ -838,45 +802,143 @@
     return 'data:image/png;base64,' + btoa(out);
   }
 
-  document.getElementById('saveBtn').addEventListener('click', function () {
-    var btn = this;
-    btn.textContent = 'Saving…';
-    btn.disabled = true;
+  /* File names: one base per person, so a colleague's three files sort together.
+     e.g. Kitso-Nexus-Card-Mugume-Atwine.png / .pdf / _editable.pdf */
+  function fileBase() {
+    var name = document.getElementById('in-name').value.trim() || 'card';
+    return 'Kitso-Nexus-Card-' + name.replace(/[^A-Za-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+  }
 
-    var card  = document.querySelector('.card');
-    var scale = 4; /* 4× render → ~330 DPI output (2800×1520px for 85.6×54mm card) */
+  function downloadDataUrl(href, name) {
+    var link = document.createElement('a');
+    link.download = name;
+    link.href = href;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
 
-    /* Wait for fonts before capturing */
+  /* ── Image: the card at 4× (2800 × 1556 px), no bleed ── */
+  function exportImage() {
+    var card  = document.querySelector('body > .card');
+    var scale = 4;
+    var CARD_WIDTH_MM = 90;
+    /* DPI written into the file so design software reads it as 90 × 50 mm.
+       2800 px over 90 mm ≈ 790 DPI, well above the 300 DPI printers ask for. */
+    var dpi = (card.offsetWidth * scale) / (CARD_WIDTH_MM / 25.4);
+
     var fontReady = document.fonts ? document.fonts.ready : Promise.resolve();
-
-    fontReady.then(function () {
+    return fontReady.then(function () {
       return domtoimage.toPng(card, {
         width:  card.offsetWidth  * scale,
         height: card.offsetHeight * scale,
         style: {
           transform:       'scale(' + scale + ')',
-          transformOrigin: 'top left'
+          transformOrigin: 'top left',
+          borderRadius:    '0'   /* square corners, as the card is cut */
         }
       });
     }).then(function (dataUrl) {
-      /* Inject 300 DPI metadata into the PNG before saving */
-      var dataUrlWith300DPI = injectDPI(dataUrl, 300);
+      downloadDataUrl(injectDPI(dataUrl, dpi), fileBase() + '.png');
+    });
+  }
 
-      var link = document.createElement('a');
-      link.download = 'Kitso-Nexus-Business-Card-300dpi.png';
-      link.href = dataUrlWith300DPI;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+  /* ── Printer PDF: one 96 × 56 mm page = 90 × 50 mm card + 3 mm bleed ── */
+  var BLEED_MM     = 3;
+  var PAGE_W_MM    = 90 + 2 * BLEED_MM;
+  var PAGE_H_MM    = 50 + 2 * BLEED_MM;
+  var RENDER_SCALE = 4;   /* 746.67 px × 4 ≈ 2987 px over 96 mm ≈ 790 DPI */
 
-      btn.textContent = '✓ Saved!';
-      setTimeout(function () {
-        btn.textContent = '📷 Save as Image';
+  /* Renders the card with bleed and returns a PNG data URL. Kept separate
+     from the download so it can be checked without saving a file. */
+  function renderBleedPng() {
+    var stage = document.createElement('div');
+    stage.className = 'bleed-stage';
+    var clone = document.querySelector('body > .card').cloneNode(true);
+    clone.querySelectorAll('[id]').forEach(function (el) { el.removeAttribute('id'); });
+    clone.classList.add('bleed');
+    stage.appendChild(clone);
+    document.body.appendChild(stage);
+
+    var fontReady = document.fonts ? document.fonts.ready : Promise.resolve();
+    return fontReady.then(function () {
+      return domtoimage.toPng(clone, {
+        width:  clone.offsetWidth  * RENDER_SCALE,
+        height: clone.offsetHeight * RENDER_SCALE,
+        style: { transform: 'scale(' + RENDER_SCALE + ')', transformOrigin: 'top left' }
+      });
+    }).finally(function () {
+      document.body.removeChild(stage);
+    });
+  }
+
+  function buildPdf(pngDataUrl) {
+    var doc = new window.jspdf.jsPDF({
+      orientation: 'landscape',
+      unit: 'mm',
+      format: [PAGE_W_MM, PAGE_H_MM],
+      compress: true
+    });
+    doc.setProperties({ title: 'Kitso Nexus business card (90 × 50 mm, 3 mm bleed)' });
+    doc.addImage(pngDataUrl, 'PNG', 0, 0, PAGE_W_MM, PAGE_H_MM, undefined, 'FAST');
+    return doc;
+  }
+
+  /* ── Editable PDF: same 96 × 56 mm bleed page, printed by Chrome so text
+     stays text and images stay separate objects. The person picks
+     "Save as PDF" in the print window. ── */
+  function prepareEditablePrint() {
+    var stage = document.createElement('div');
+    stage.className = 'editable-stage';
+    var clone = document.querySelector('body > .card').cloneNode(true);
+    clone.querySelectorAll('[id]').forEach(function (el) { el.removeAttribute('id'); });
+    clone.classList.add('bleed');
+    stage.appendChild(clone);
+    document.body.appendChild(stage);
+
+    var page = document.createElement('style');
+    page.id = 'editable-page-size';
+    page.textContent = '@page { size: ' + PAGE_W_MM + 'mm ' + PAGE_H_MM + 'mm; margin: 0; }';
+    document.head.appendChild(page);
+
+    document.body.classList.add('editable-print');
+    var title = document.title;
+    /* Chrome suggests the page title as the PDF file name */
+    document.title = fileBase() + '_editable';
+
+    return function cleanup() {
+      document.body.classList.remove('editable-print');
+      document.title = title;
+      page.remove();
+      stage.remove();
+    };
+  }
+
+  /* ── One button: image, then PDF, then the print window for the editable
+     PDF (browsers can only make real-text PDFs through printing). ── */
+  document.getElementById('exportBtn').addEventListener('click', function () {
+    var btn = this;
+    var label = btn.textContent;
+    btn.disabled = true;
+    btn.textContent = 'Saving image…';
+
+    exportImage().then(function () {
+      btn.textContent = 'Building PDF…';
+      return renderBleedPng();
+    }).then(function (png) {
+      buildPdf(png).save(fileBase() + '.pdf');
+      btn.textContent = 'Opening print window for the editable PDF…';
+      var cleanup = prepareEditablePrint();
+      window.addEventListener('afterprint', function () {
+        cleanup();
+        btn.textContent = label;
         btn.disabled = false;
-      }, 2000);
+      }, { once: true });
+      /* small pause so the PDF download starts before the print window opens */
+      setTimeout(function () { window.print(); }, 400);
     }).catch(function (err) {
-      console.error('Save failed:', err);
-      btn.textContent = '⚠ Failed — check console';
+      console.error('Export failed:', err);
+      btn.textContent = '⚠ Export failed — check console';
       btn.disabled = false;
     });
   });
@@ -885,12 +947,15 @@
 <!--
   HOW TO CUSTOMISE
   ─────────────────
-  • Name / Title / Contact  → edit text directly in the HTML above
-  • Services list           → add/remove <li> items in .services-list
+  • Name / Title / Contact  → type in the editor panel under the card
+  • Export all              → one click saves, named after the person:
+                               <name>.png           2800 × 1556 px, 90 × 50 mm
+                               <name>.pdf           96 × 56 mm page (card + 3 mm bleed)
+                               <name>_editable.pdf  same page, real text; Chrome's
+                                                    print window opens, choose Save as PDF
+  • Services list           → edit the items inside .services-list
   • QR code                 → replace src on <img class="qr-img">
   • Logo                    → swap src on the <img class="logo-img"> tag
-  • Print                   → click the teal Print button, set paper=A4,
-                               margins=None, tick "Background graphics"
 -->
 
 </body>
