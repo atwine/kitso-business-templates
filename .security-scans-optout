@@ -1,0 +1,11 @@
+Opted out of security scanners (gitleaks, pip-audit, npm audit, Semgrep).
+
+Decided by: repo owner, 2026-11-18, asked during the business card export work.
+
+Why: this repo holds static HTML/CSS/JS print templates (business card and
+flyer) with no backend, no build step, no dependencies to audit, and no
+secrets, credentials or user data. The pages only run on a local web server
+on the owner's computer.
+
+Revisit if the repo gains a backend, a package manifest, API keys, or
+stores data about people beyond the contact details printed on the cards.
