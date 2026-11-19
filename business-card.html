@@ -45,28 +45,28 @@
     .actions { display: flex; gap: 12px; }
 
     /* ════════════ PRINTER PDF: 3 mm BLEED ════════════
-       The PDF page is 96 × 56 mm: the 90 × 50 mm card plus 3 mm on every
-       side. The printer trims it back to 90 × 50 mm, so backgrounds must run
+       The PDF page is 91 × 61 mm: the 85 × 55 mm card plus 3 mm on every
+       side. The printer trims it back to 85 × 55 mm, so backgrounds must run
        past the cut line while text stays exactly where it is.
-       3 mm on a 700 px wide / 90 mm card = 23.33 px.
+       3 mm on a 700 px wide / 85 mm card = 24.71 px.
        Applied only to the off-screen copy that renderBleedPng() renders.        */
     .card.bleed {
-      width: 746.67px;            /* 700 + 2 × 23.33 */
-      height: 435.67px;           /* 389 + 2 × 23.33 */
+      width: 749.41px;            /* 700 + 2 × 24.71 */
+      height: 502.41px;           /* 453 + 2 × 24.71 */
       border-radius: 0;
       box-shadow: none;
     }
     .card.bleed .left {
-      width: 345.33px;            /* 322 (46% of 700) + 23.33 */
-      padding: 47.33px 22px 45.33px 47.33px;   /* each outer side + 23.33 */
+      width: 346.71px;            /* 322 (46% of 700) + 24.71 */
+      padding: 48.71px 22px 46.71px 48.71px;   /* each outer side + 24.71 */
     }
     .card.bleed .right {
-      padding: 45.33px 45.33px 43.33px 22px;   /* each outer side + 23.33 */
+      padding: 46.71px 46.71px 44.71px 22px;   /* each outer side + 24.71 */
     }
     /* Corner triangles: grown so their slanted edge stays on the same line
        once the bleed is trimmed off. */
-    .card.bleed .right::before { border-width: 0 231.33px 192.78px 0; }
-    .card.bleed .right::after  { border-width: 0 294.67px 133.94px 0; }
+    .card.bleed .right::before { border-width: 0 234.35px 195.29px 0; }
+    .card.bleed .right::after  { border-width: 0 299.06px 135.94px 0; }
     .bleed-stage { position: fixed; left: -10000px; top: 0; }
 
     /* Ctrl+P prints the page as shown, minus the buttons and editor */
@@ -75,9 +75,9 @@
     /* ════════════ EDITABLE PDF ════════════
        "Export editable PDF" prints through Chrome so text stays real text.
        While body has .editable-print, only the bleed copy prints, at exactly
-       96 × 56 mm. The matching @page size is added by the script, because
+       91 × 61 mm. The matching @page size is added by the script, because
        @page cannot depend on a class. zoom (not transform) so Chrome lays the
-       copy out at its printed size: 746.67 px × 0.485939 = 362.83 px = 96 mm. */
+       copy out at its printed size: 749.41 px × 0.458943 = 343.94 px = 91 mm. */
     .editable-stage { display: none; }
     @media print {
       body.editable-print {
@@ -86,11 +86,11 @@
       body.editable-print > *:not(.editable-stage) { display: none !important; }
       body.editable-print .editable-stage {
         display: block;
-        width: 96mm; height: 56mm;
+        width: 91mm; height: 61mm;
         overflow: hidden;          /* rounding must not spill onto a 2nd page */
       }
       body.editable-print .editable-stage .card {
-        zoom: 0.485939;
+        zoom: 0.458943;
         -webkit-print-color-adjust: exact;
         print-color-adjust: exact;   /* backgrounds print without ticking a box */
       }
@@ -100,10 +100,10 @@
       }
     }
 
-    /* ── Card shell: 700 × 389 px (90 × 50 mm shape) ── */
+    /* ── Card shell: 700 × 453 px (85 × 55 mm shape) ── */
     .card {
       width: 700px;
-      height: 389px;
+      height: 453px;
       display: flex;
       border-radius: 10px;
       overflow: hidden;
@@ -159,7 +159,7 @@
       display: flex;
       align-items: center;
       gap: 11px;
-      margin-bottom: 20px;
+      margin-bottom: 26px;
       position: relative;
       z-index: 1;
     }
@@ -203,7 +203,7 @@
       color: #2ec4a0;
       letter-spacing: 3px;
       text-transform: uppercase;
-      margin-bottom: 10px;
+      margin-bottom: 14px;
       padding-bottom: 8px;
       border-bottom: 1px solid rgba(46,196,160,0.2);
     }
@@ -214,7 +214,7 @@
       display: flex;
       flex-direction: column;
       justify-content: flex-start; /* was space-between — caused large gaps */
-      gap: 7px;                    /* uniform spacing between rows */
+      gap: 17px;                   /* uniform spacing between rows */
     }
 
     .services-list li {
@@ -818,13 +818,13 @@
     document.body.removeChild(link);
   }
 
-  /* ── Image: the card at 4× (2800 × 1556 px), no bleed ── */
+  /* ── Image: the card at 4× (2800 × 1812 px), no bleed ── */
   function exportImage() {
     var card  = document.querySelector('body > .card');
     var scale = 4;
-    var CARD_WIDTH_MM = 90;
-    /* DPI written into the file so design software reads it as 90 × 50 mm.
-       2800 px over 90 mm ≈ 790 DPI, well above the 300 DPI printers ask for. */
+    var CARD_WIDTH_MM = 85;
+    /* DPI written into the file so design software reads it as 85 × 55 mm.
+       2800 px over 85 mm ≈ 837 DPI, well above the 300 DPI printers ask for. */
     var dpi = (card.offsetWidth * scale) / (CARD_WIDTH_MM / 25.4);
 
     var fontReady = document.fonts ? document.fonts.ready : Promise.resolve();
@@ -843,11 +843,11 @@
     });
   }
 
-  /* ── Printer PDF: one 96 × 56 mm page = 90 × 50 mm card + 3 mm bleed ── */
+  /* ── Printer PDF: one 91 × 61 mm page = 85 × 55 mm card + 3 mm bleed ── */
   var BLEED_MM     = 3;
-  var PAGE_W_MM    = 90 + 2 * BLEED_MM;
-  var PAGE_H_MM    = 50 + 2 * BLEED_MM;
-  var RENDER_SCALE = 4;   /* 746.67 px × 4 ≈ 2987 px over 96 mm ≈ 790 DPI */
+  var PAGE_W_MM    = 85 + 2 * BLEED_MM;
+  var PAGE_H_MM    = 55 + 2 * BLEED_MM;
+  var RENDER_SCALE = 4;   /* 749.41 px × 4 ≈ 2998 px over 91 mm ≈ 837 DPI */
 
   /* Renders the card with bleed and returns a PNG data URL. Kept separate
      from the download so it can be checked without saving a file. */
@@ -879,12 +879,12 @@
       format: [PAGE_W_MM, PAGE_H_MM],
       compress: true
     });
-    doc.setProperties({ title: 'Kitso Nexus business card (90 × 50 mm, 3 mm bleed)' });
+    doc.setProperties({ title: 'Kitso Nexus business card (85 × 55 mm, 3 mm bleed)' });
     doc.addImage(pngDataUrl, 'PNG', 0, 0, PAGE_W_MM, PAGE_H_MM, undefined, 'FAST');
     return doc;
   }
 
-  /* ── Editable PDF: same 96 × 56 mm bleed page, printed by Chrome so text
+  /* ── Editable PDF: same 91 × 61 mm bleed page, printed by Chrome so text
      stays text and images stay separate objects. The person picks
      "Save as PDF" in the print window. ── */
   function prepareEditablePrint() {
@@ -949,8 +949,8 @@
   ─────────────────
   • Name / Title / Contact  → type in the editor panel under the card
   • Export all              → one click saves, named after the person:
-                               <name>.png           2800 × 1556 px, 90 × 50 mm
-                               <name>.pdf           96 × 56 mm page (card + 3 mm bleed)
+                               <name>.png           2800 × 1812 px, 85 × 55 mm
+                               <name>.pdf           91 × 61 mm page (card + 3 mm bleed)
                                <name>_editable.pdf  same page, real text; Chrome's
                                                     print window opens, choose Save as PDF
   • Services list           → edit the items inside .services-list

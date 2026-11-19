@@ -144,21 +144,21 @@ git push origin client-name
 
 ## Files for the Print Shop
 
-The card is **90 × 50 mm**. Under the editor is one button, **Export all**. One click gives you three files, named after the person:
+The card is **85 × 55 mm** after cutting. The files you send are **91 × 61 mm**: the card plus a 3 mm margin on every side that the print shop cuts off. Under the editor is one button, **Export all**. One click gives you three files, named after the person:
 
 | File | What it is |
 |---|---|
-| `Kitso-Nexus-Card-<Name>.png` | High-definition image of the card: 2800 × 1556 pixels, tagged as 90 × 50 mm (about 790 DPI; printers ask for 300) |
-| `Kitso-Nexus-Card-<Name>.pdf` | One page, 96 × 56 mm: the card plus 3 mm **bleed** on every side. Looks identical on every computer. This is the "print-ready PDF" most print shops ask for. |
+| `Kitso-Nexus-Card-<Name>.png` | High-definition image of the card: 2800 × 1812 pixels, tagged as 85 × 55 mm (about 837 DPI; printers ask for 300) |
+| `Kitso-Nexus-Card-<Name>.pdf` | One page, 91 × 61 mm: the card plus 3 mm **bleed** on every side. Looks identical on every computer. This is the "print-ready PDF" most print shops ask for. |
 | `Kitso-Nexus-Card-<Name>_editable.pdf` | The same page, but the words stay real text that a print shop can change in Illustrator or CorelDRAW |
 
 The image and the PDF download straight away. For the editable PDF, Chrome's print window then opens: set **Destination** to **Save as PDF** and click **Save** (the file name is already filled in). Browsers can only make real-text PDFs through printing, which is why this one step needs you. The first time, Chrome may ask whether the page may download multiple files; allow it.
 
 To edit text in the editable PDF, the print shop needs the fonts installed: **Segoe UI** (comes with Windows) and **Dancing Script** (free from Google Fonts).
 
-**What bleed means:** cutting machines can drift by a millimetre or so. In the PDF the background colours run 3 mm past the cut line, so a slightly off cut still lands on colour instead of leaving a white sliver. The printer trims the 96 × 56 mm page back to 90 × 50 mm.
+**What bleed means:** cutting machines can drift by a millimetre or so. In the PDF the background colours run 3 mm past the cut line, so a slightly off cut still lands on colour instead of leaving a white sliver. The printer trims the 91 × 61 mm page back to 85 × 55 mm.
 
-**Worth asking the print shop:** whether they want CMYK colour (these files are RGB, which most shops convert themselves) and whether 90 × 50 mm is their standard size.
+**Worth asking the print shop:** whether they want CMYK colour (these files are RGB, which most shops convert themselves) (the shop we used asked for 91 × 61 mm files, which is what Export all makes).
 
 ---
 
